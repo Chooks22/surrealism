@@ -1,0 +1,60 @@
+{
+  "name": "surrealism",
+  "version": "0.0.1",
+  "description": "SurrealDB Driver",
+  "license": "MIT",
+  "type": "module",
+  "packageManager": "pnpm@8.6.12",
+  "main": "./dist/mod.js",
+  "types": "./dist/mod.d.ts",
+  "browser": "./dist/mod.js",
+  "files": [
+    "./dist/**/*.{js,d.ts}"
+  ],
+  "exports": {
+    ".": {
+      "node": "./dist/node/index.js",
+      "default": "./dist/mod.js",
+      "types": "./dist/index.js"
+    },
+    "./http": {
+      "default": "./dist/http.js",
+      "types": "./dist/http.d.ts"
+    },
+    "./ws": {
+      "node": "./dist/node/ws.js",
+      "default": "./dist/ws.js",
+      "types": "./dist/ws.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "rimraf dist && tsc",
+    "dev": "rimraf dist && tsc -w --incremental --sourceMap --declarationMap",
+    "lint": "eslint src"
+  },
+  "dependencies": {
+    "ws": "^8.13.0"
+  },
+  "devDependencies": {
+    "@chookslint/eslint-config-typescript": "^3.0.2",
+    "@types/node": "^20.4.10",
+    "@types/ws": "^8.5.5",
+    "@typescript-eslint/eslint-plugin": "^6.3.0",
+    "@typescript-eslint/parser": "^6.3.0",
+    "eslint": "^8.47.0",
+    "rimraf": "^5.0.1",
+    "typescript": "^5.1.6"
+  },
+  "author": "Chooks22 <chooksdev@gmail.com> (https://github.com/Chooks22)",
+  "repository": {
+    "url": "https://github.com/Chooks22/surrealism"
+  },
+  "keywords": [
+    "surrealdb",
+    "client",
+    "adapter"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

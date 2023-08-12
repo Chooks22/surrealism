@@ -1,0 +1,27 @@
+root: true
+env:
+  node: true
+  browser: true
+extends:
+  - "@chookslint/typescript/strict"
+  - "@chookslint/typescript/types"
+ignorePatterns:
+  - dist
+parserOptions:
+  project: true
+  sourceType: module
+  ecmaVersion: 2023
+overrides:
+  - files: "*.js"
+    extends:
+      - "plugin:@typescript-eslint/disable-type-checked"
+rules:
+  no-empty-function: off
+  "@typescript-eslint/no-empty-function":
+    - warn
+    - allow:
+        - "private-constructors"
+        - "protected-constructors"
+        - "decoratedFunctions"
+        - "overrideMethods"
+  "@typescript-eslint/explicit-member-accessibility": off
