@@ -16,6 +16,7 @@ overrides:
     extends:
       - "plugin:@typescript-eslint/disable-type-checked"
 rules:
+  max-len: off
   no-empty-function: off
   "@typescript-eslint/no-empty-function":
     - warn
@@ -25,3 +26,4 @@ rules:
         - "decoratedFunctions"
         - "overrideMethods"
   "@typescript-eslint/explicit-member-accessibility": off
+  "@typescript-eslint/method-signature-style": off
