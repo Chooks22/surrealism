@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/method-signature-style, max-len */
 export interface RootCredentials {
   user: string
   pass: string
