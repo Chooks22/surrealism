@@ -1,3 +1,5 @@
+import type { AnyObject } from './utils.js'
+
 export interface RootCredentials {
   user: string
   pass: string
@@ -45,13 +47,13 @@ export interface SurrealKey {
    *
    * @link https://surrealdb.com/docs/integration/http#create-all
    */
-  post<TData extends Record<string, unknown>, TResults>(data: TData[], opts?: SurrealOpts): Promise<[SurrealData<TResults[]>]>
+  post<TData extends AnyObject, TResults>(data: TData[], opts?: SurrealOpts): Promise<[SurrealData<TResults[]>]>
   /**
    * `POST` `/key/:table/:id`
    *
    * @link https://surrealdb.com/docs/integration/http#create-one
    */
-  post<TData extends Record<string, unknown>, TResults>(id: string, data: TData, opts?: SurrealOpts): Promise<[SurrealData<[TResults]>]>
+  post<TData extends AnyObject, TResults>(id: string, data: TData, opts?: SurrealOpts): Promise<[SurrealData<[TResults]>]>
   /**
    * `DELETE` `/key/:table`
    *
@@ -69,13 +71,13 @@ export interface SurrealKey {
    *
    * @link https://surrealdb.com/docs/integration/http#update-one
    */
-  put<TData extends Record<string, unknown>, TResults>(id: string, data: TData, opts?: SurrealOpts): Promise<[SurrealData<[TResults]>]>
+  put<TData extends AnyObject, TResults>(id: string, data: TData, opts?: SurrealOpts): Promise<[SurrealData<[TResults]>]>
   /**
    * `PATCH` `/key/:table/:id`
    *
    * @link https://surrealdb.com/docs/integration/http#modify-one
    */
-  patch<TData extends Record<string, unknown>, TResults>(id: string, data: TData, opts?: SurrealOpts): Promise<[SurrealData<[TResults]>]>
+  patch<TData extends AnyObject, TResults>(id: string, data: TData, opts?: SurrealOpts): Promise<[SurrealData<[TResults]>]>
 }
 
 export class SurrealHttp {
