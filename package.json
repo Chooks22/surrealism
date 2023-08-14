@@ -32,7 +32,7 @@
     }
   },
   "scripts": {
-    "build": "rimraf dist && tsup src --format cjs,esm --dts",
+    "build": "tsup src --clean --format cjs,esm --dts",
     "dev": "tsc -w",
     "lint": "tsc && eslint src"
   },
@@ -46,7 +46,6 @@
     "@typescript-eslint/eslint-plugin": "^6.3.0",
     "@typescript-eslint/parser": "^6.3.0",
     "eslint": "^8.47.0",
-    "rimraf": "^5.0.1",
     "tsup": "^7.2.0",
     "typescript": "^5.1.6"
   },
