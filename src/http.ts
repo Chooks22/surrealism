@@ -1,4 +1,4 @@
-import type { AnyObject } from './utils.js'
+import type { AnyObject } from './utils.ts'
 
 export interface RootCredentials {
   user: string

@@ -1,6 +1,6 @@
-import { SurrealWs } from './ws.js'
+import { SurrealWs } from './ws.ts'
 SurrealWs.WebSocket ??= WebSocket
 
-export * from './http.js'
-export * from './ws.js'
-export * from './surreal.js'
+export * from './http.ts'
+export * from './ws.ts'
+export * from './surreal.ts'

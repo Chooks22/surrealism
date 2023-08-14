@@ -1,5 +1,5 @@
-import { SurrealHttp, type SurrealCredentials, type SurrealData, type SurrealOpts } from './http.js'
-import { indexToName, serialize, type AnyObject, type DeepPartial, type UnknownObject } from './utils.js'
+import { SurrealHttp, type SurrealCredentials, type SurrealData, type SurrealOpts } from './http.ts'
+import { indexToName, serialize, type AnyObject, type DeepPartial, type UnknownObject } from './utils.ts'
 
 export class Surreal {
   static new(connectionUri: string, opts: SurrealCredentials): PromiseLike<Surreal> & { use: (opts: { ns: string; db: string }) => Promise<Surreal> } {

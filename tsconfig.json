@@ -4,7 +4,9 @@
     "alwaysStrict": true,
     "target": "ES2022",
     "module": "ES2022",
-    "moduleResolution": "NodeNext",
+    "moduleResolution": "Bundler",
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
     "lib": [
       "ESNext",
       "DOM"
