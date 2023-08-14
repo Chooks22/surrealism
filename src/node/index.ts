@@ -1,4 +1,4 @@
 import './shim.ts'
-export * from '../http.ts'
-export * from '../ws.ts'
-export * from '../surreal.ts'
+export * from '../driver/http.ts'
+export * from '../driver/ws.ts'
+export * from '../driver/surreal.ts'
