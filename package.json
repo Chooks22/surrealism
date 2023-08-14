@@ -5,31 +5,35 @@
   "license": "MIT",
   "type": "module",
   "packageManager": "pnpm@8.6.12",
-  "main": "./dist/mod.js",
-  "types": "./dist/mod.d.ts",
+  "main": "./dist/node/index.cjs",
+  "module": "./dist/node/index.js",
+  "types": "./dist/node/index.d.ts",
   "browser": "./dist/mod.js",
   "files": [
-    "./dist/**/*.{js,d.ts}"
+    "./dist/**/*.{js,cjs,d.ts}"
   ],
   "exports": {
     ".": {
-      "node": "./dist/node/index.js",
+      "require": "./dist/node/index.cjs",
+      "import": "./dist/node/index.js",
       "default": "./dist/mod.js",
-      "types": "./dist/index.js"
+      "types": "./dist/mod.d.ts"
     },
     "./http": {
+      "require": "./dist/http.cjs",
       "default": "./dist/http.js",
       "types": "./dist/http.d.ts"
     },
     "./ws": {
-      "node": "./dist/node/ws.js",
+      "require": "./dist/node/ws.cjs",
+      "import": "./dist/node/ws.js",
       "default": "./dist/ws.js",
       "types": "./dist/ws.d.ts"
     }
   },
   "scripts": {
-    "build": "rimraf dist && tsc",
-    "dev": "rimraf dist && tsc -w --incremental --sourceMap --declarationMap",
+    "build": "rimraf dist && tsup src --format cjs,esm --dts",
+    "dev": "tsc -w",
     "lint": "eslint src"
   },
   "dependencies": {
@@ -43,6 +47,7 @@
     "@typescript-eslint/parser": "^6.3.0",
     "eslint": "^8.47.0",
     "rimraf": "^5.0.1",
+    "tsup": "^7.2.0",
     "typescript": "^5.1.6"
   },
   "author": "Chooks22 <chooksdev@gmail.com> (https://github.com/Chooks22)",
