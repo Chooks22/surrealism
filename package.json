@@ -10,7 +10,7 @@
   "types": "./dist/node/index.d.ts",
   "browser": "./dist/mod.js",
   "files": [
-    "./dist/**/*.{js,cjs,d.ts}"
+    "./dist/**/*.{js,cjs,d.ts,d.cts}"
   ],
   "exports": {
     ".": {
