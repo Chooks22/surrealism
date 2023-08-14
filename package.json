@@ -33,7 +33,7 @@
   },
   "scripts": {
     "build": "tsup src --clean --format cjs,esm --dts",
-    "dev": "tsc -w",
+    "dev": "pnpm run build --watch",
     "lint": "tsc && eslint src"
   },
   "dependencies": {
