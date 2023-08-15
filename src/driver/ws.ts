@@ -79,7 +79,7 @@ export class SurrealWs {
   async unset(name: string): Promise<void> {
     await this.#send('unset', [name])
   }
-  query<TResult extends SurrealData>(query: string, vars?: AnyObject): Promise<TResult> {
+  query<TResult extends SurrealData[]>(query: string, vars?: AnyObject): Promise<TResult> {
     return this.#send('query', [query, vars])
   }
   select<TResult extends AnyObject = UnknownObject>(thing: string): Promise<TResult> {
