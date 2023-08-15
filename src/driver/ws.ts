@@ -111,4 +111,7 @@ export class SurrealWs {
       })
     }
   }
+  async [(Symbol as AnyObject).asyncDispose](): Promise<void> {
+    await this.close()
+  }
 }

@@ -232,4 +232,7 @@ export class Surreal {
   async close(): Promise<void> {
     await this.ws?.close()
   }
+  async [(Symbol as AnyObject).asyncDispose](): Promise<void> {
+    await this.close()
+  }
 }
