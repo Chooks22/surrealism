@@ -81,7 +81,11 @@ export interface SurrealKey {
 }
 
 export class SurrealHttp {
-  constructor(public connectionUri: string) {
+  connectionUri: string
+  constructor(connectionUri: string) {
+    this.connectionUri = connectionUri.endsWith('/')
+      ? connectionUri.slice(0, -1)
+      : connectionUri
   }
   /**
    * `GET` `/export`

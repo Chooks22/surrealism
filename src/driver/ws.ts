@@ -28,9 +28,13 @@ export class SurrealWs {
   }
   static WebSocket: typeof WebSocket
   static connect(connectionUri: string, opts: SurrealCredentials): PromiseLike<SurrealWs> & { use: (opts: { ns: string; db: string }) => Promise<SurrealWs> } {
+    const _connectionUri = connectionUri.endsWith('/')
+      ? connectionUri.slice(0, -1)
+      : connectionUri
+
     return {
       then: async (onfulfilled, onrejected) => {
-        const socket = new this.WebSocket(connectionUri)
+        const socket = new this.WebSocket(_connectionUri)
 
         if (socket.readyState !== socket.OPEN) {
           await new Promise<void>(res => {
@@ -43,7 +47,7 @@ export class SurrealWs {
         return Promise.resolve(ws).then(onfulfilled, onrejected)
       },
       use: async _opts => {
-        const ws = await SurrealWs.connect(connectionUri, opts)
+        const ws = await SurrealWs.connect(_connectionUri, opts)
         await ws.use(_opts)
         return ws
       },
