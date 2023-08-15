@@ -68,7 +68,7 @@ export class Surreal {
     return res.result[0]
   }
   async mutate<TData extends AnyObject = UnknownObject, TResult = TData & { id: string }>(table: string, id: string, data: DeepPartial<TData>): Promise<TResult> {
-    const [res] = await this.http.key(table).put<DeepPartial<TData>, TResult>(id, data, this.opts)
+    const [res] = await this.http.key(table).patch<DeepPartial<TData>, TResult>(id, data, this.opts)
     return res.result[0]
   }
   async sql<TResult extends SurrealData[]>(query: TemplateStringsArray, ...args: unknown[]): Promise<TResult> {
