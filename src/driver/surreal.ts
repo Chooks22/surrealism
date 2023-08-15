@@ -7,14 +7,33 @@ export class Surreal {
     http?: string
     ws?: string
   }, opts: SurrealCredentials): PromiseLike<Surreal> & { use: (opts: { ns: string; db: string }) => Promise<Surreal> } {
+    let inferred: 'none' | 'http' | 'ws' = 'none'
     let httpUri!: string
     let wsUri!: string
 
     if (typeof connectionUri === 'string') {
       if (connectionUri.startsWith('http')) {
         httpUri = connectionUri
+        const url = new URL(httpUri)
+        url.protocol = url.protocol === 'https:'
+          ? 'wss:'
+          : 'ws:'
+        url.pathname += url.pathname.endsWith('/')
+          ? 'rpc'
+          : '/rpc'
+        wsUri = url.toString()
+        inferred = 'ws'
       } else if (connectionUri.startsWith('ws')) {
         wsUri = connectionUri
+        const url = new URL(wsUri)
+        url.protocol = url.protocol === 'wss:'
+          ? 'https:'
+          : 'http:'
+        if (url.pathname.endsWith('rpc')) {
+          url.pathname = url.pathname.slice(0, -3)
+        }
+        httpUri = url.toString()
+        inferred = 'http'
       } else {
         throw new Error(`scheme not supported. got: ${connectionUri}`)
       }
@@ -43,19 +62,35 @@ export class Surreal {
       then: async (onfullfilled, onrejected) => {
         let http = null
         let ws = null
-        let authorization
+        let authorization!: string
 
         if (httpUri) {
-          http = new SurrealHttp(httpUri)
-          authorization = await http.signin(opts)
+          try {
+            http = new SurrealHttp(httpUri)
+            authorization = (await http.signin(opts))!
 
-          if (authorization === null) {
-            throw new Error('invalid credentials')
+            if (authorization === null) {
+              throw new Error('invalid credentials')
+            }
+          } catch (error) {
+            if (inferred === 'http') {
+              console.debug('inferred http url did not work. tried: %s. got: %O', httpUri, error)
+            } else {
+              throw error
+            }
           }
         }
 
         if (wsUri) {
-          ws = await SurrealWs.connect(wsUri, opts)
+          try {
+            ws = await SurrealWs.connect(wsUri, opts)
+          } catch (error) {
+            if (inferred === 'ws') {
+              console.debug('inferred ws url did not work. tried: %s. got: %O', wsUri, error)
+            } else {
+              throw error
+            }
+          }
         }
 
         const db = new Surreal(http, ws, { authorization })
