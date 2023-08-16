@@ -60,48 +60,123 @@ export class SurrealWs {
       this.#resolve(data)
     })
   }
+  /**
+   * `use` `[ ns, db ]` method
+   *
+   * @link https://surrealdb.com/docs/integration/websocket/text#use
+   */
   async use(opts: { ns: string; db: string }): Promise<void> {
     await this.#send('use', [opts.ns, opts.db])
   }
+  /**
+   * `info` method
+   *
+   * @link https://surrealdb.com/docs/integration/websocket/text#info
+   */
   info(): Promise<UnknownObject | null> {
     return this.#send('info')
   }
+  /**
+   * `signup` `[ NS, DB, SC, ... ]` method
+   *
+   * @link https://surrealdb.com/docs/integration/websocket/text#signup
+   */
   signup(opts: { NS: string; DB: string; SC: string } & AnyObject): Promise<string> {
     return this.#send('signup', [opts])
   }
+  /**
+   * `signin` `[ NS, DB, SC, ... ]` method
+   *
+   * @link https://surrealdb.com/docs/integration/websocket/text#signin
+   */
   signin(opts: { user: string; pass: string; NS?: string; DB?: string; SC?: string }): Promise<null | string> {
     return this.#send('signin', [opts])
   }
+  /**
+   * `authenticate` `[ token ]` method
+   *
+   * @link https://surrealdb.com/docs/integration/websocket/text#authenticate
+   */
   async authenticate(token: string): Promise<void> {
     await this.#send('authenticate', [token])
   }
+  /**
+   * `invalidate` method
+   *
+   * @link https://surrealdb.com/docs/integration/websocket/text#authenticate
+   */
   async invalidate(): Promise<void> {
     await this.#send('invalidate')
   }
+  /**
+   * `let` `[ name, value ]` method
+   *
+   * @link https://surrealdb.com/docs/integration/websocket/text#let
+   */
   async let(name: string, value: unknown): Promise<void> {
     await this.#send('let', [name, value])
   }
+  /**
+   * `unset` `[ name ]` method
+   *
+   * @link https://surrealdb.com/docs/integration/websocket/text#unset
+   */
   async unset(name: string): Promise<void> {
     await this.#send('unset', [name])
   }
+  /**
+   * `query` `[ sql, vars ]` method
+   *
+   * @link https://surrealdb.com/docs/integration/websocket/text#query
+   */
   query<TResult extends MaybeArray<SurrealData>>(query: string, vars?: AnyObject): Promise<TResult> {
     return this.#send('query', [query, vars])
   }
+  /**
+   * `select` `[ think ]` method
+   *
+   * @link https://surrealdb.com/docs/integration/websocket/text#select
+   */
   select<TResult extends AnyObject = UnknownObject>(thing: string): Promise<TResult> {
     return this.#send('select', [thing])
   }
+  /**
+   * `create` `[ think, data ]` method
+   *
+   * @link https://surrealdb.com/docs/integration/websocket/text#create
+   */
   create<TData extends AnyObject = UnknownObject, TResult = TData & { id: string }>(thing: string, data?: TData): Promise<TResult> {
     return this.#send('create', [thing, data])
   }
+  /**
+   * `update` `[ think, data ]` method
+   *
+   * @link https://surrealdb.com/docs/integration/websocket/text#update
+   */
   update<TData extends AnyObject = UnknownObject, TResult = TData & { id: string }>(thing: string, data?: TData): Promise<TResult> {
     return this.#send('update', [thing, data])
   }
+  /**
+   * `merge` `[ thing, data ]` method
+   *
+   * @link https://surrealdb.com/docs/integration/websocket/text#merge
+   */
   merge<TData extends AnyObject = UnknownObject, TResult = TData & { id: string }>(thing: string, data?: TData): Promise<TResult> {
     return this.#send('merge', [thing, data])
   }
+  /**
+   * `patch` `[ thing, patches ]` method
+   *
+   * @link https://surrealdb.com/docs/integration/websocket/text#patch
+   */
   patch(thing: string, patches: JSONPatch[]): Promise<JSONPatch[][]> {
     return this.#send('patch', [thing, patches])
   }
+  /**
+   * `delete` `[ thing, patches ]` method
+   *
+   * @link https://surrealdb.com/docs/integration/websocket/text#delete
+   */
   delete<TResult extends AnyObject = UnknownObject>(thing: string): Promise<TResult> {
     return this.#send('delete', [thing])
   }
