@@ -1,5 +1,6 @@
-import type { SurrealCredentials, SurrealData } from './http.ts'
-import { type AnyObject, type UnknownObject } from '../_utils.ts'
+import type { MaybeArray } from '../_utils.ts';
+import { type AnyObject, type UnknownObject } from '../_utils.ts';
+import type { SurrealCredentials, SurrealData } from './http.ts';
 
 export type JSONPatch = { path: string }
 & { op: 'add'; value: any }
@@ -83,7 +84,7 @@ export class SurrealWs {
   async unset(name: string): Promise<void> {
     await this.#send('unset', [name])
   }
-  query<TResult extends SurrealData[]>(query: string, vars?: AnyObject): Promise<TResult> {
+  query<TResult extends MaybeArray<SurrealData>>(query: string, vars?: AnyObject): Promise<TResult> {
     return this.#send('query', [query, vars])
   }
   select<TResult extends AnyObject = UnknownObject>(thing: string): Promise<TResult> {

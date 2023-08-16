@@ -1,4 +1,4 @@
-import { indexToName, serialize, type AnyObject, type DeepPartial, type UnknownObject } from '../_utils.ts'
+import { indexToName, serialize, type AnyObject, type DeepPartial, type MaybeArray, type UnknownObject } from '../_utils.ts'
 import { SurrealHttp, type SurrealCredentials, type SurrealData, type SurrealOpts } from './http.ts'
 import { SurrealWs, type JSONPatch } from './ws.ts'
 
@@ -204,7 +204,7 @@ export class Surreal {
 
     return this.ws.patch(thing, patches)
   }
-  async sql<TResult extends SurrealData[]>(query: TemplateStringsArray, ...args: unknown[]): Promise<TResult> {
+  async sql<TResult extends MaybeArray<SurrealData>>(query: TemplateStringsArray, ...args: unknown[]): Promise<TResult> {
     const _query = String.raw({ raw: query }, ...args.map((_, i) => `$${indexToName(i)}`))
 
     if (this.ws) {
@@ -213,7 +213,7 @@ export class Surreal {
     }
 
     const _args = args.length > 0 ? args.map((value, i) => `${indexToName(i)}=${serialize(value)}`).join('&') : undefined
-    return this.http!.sql(_query, { args: _args, ...this.opts }) as Promise<TResult>
+    return this.http!.sql(_query, { args: _args, ...this.opts })
   }
   async health(): Promise<boolean> {
     if (!this.http) {

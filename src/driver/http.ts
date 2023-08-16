@@ -1,4 +1,4 @@
-import type { AnyObject } from '../_utils.ts'
+import type { AnyObject, MaybeArray } from '../_utils.ts'
 
 export interface RootCredentials {
   user: string
@@ -17,7 +17,7 @@ export interface ScopedCredentials extends NamespacedCredentials {
 
 export type SurrealCredentials = RootCredentials | NamespacedCredentials | ScopedCredentials
 
-export interface SurrealData<T extends unknown[] = unknown[]> {
+export interface SurrealData<T = unknown> {
   time: string
   status: string
   result: T
@@ -284,7 +284,7 @@ export class SurrealHttp {
    *
    * @link https://surrealdb.com/docs/integration/http#sql
    */
-  async sql(query: string, opts?: SurrealOpts & { args?: URLSearchParams | string }): Promise<SurrealData[]> {
+  async sql<TResult extends MaybeArray<SurrealData>>(query: string, opts?: SurrealOpts & { args?: URLSearchParams | string }): Promise<TResult> {
     const search = opts?.args ? `?${opts.args}` : ''
     const res = await fetch(`${this.connectionUri}/sql${search}`, {
       method: 'POST',
@@ -297,7 +297,7 @@ export class SurrealHttp {
       body: query,
     })
 
-    return res.json() as Promise<SurrealData[]>
+    return res.json() as Promise<TResult>
   }
   /**
    * `GET` `/status`
