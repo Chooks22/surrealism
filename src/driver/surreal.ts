@@ -139,9 +139,9 @@ export class Surreal {
     const [res] = await this.http!.key(table).get<TData>(this.opts)
     return res.result
   }
-  async create<TData extends AnyObject, TResult = TData & { id: string }>(table: string, data: TData[]): Promise<TResult[]>
+  async create<TData extends AnyObject, TResult = TData & { id: string }>(table: string, data: TData): Promise<TResult>
   async create<TData extends AnyObject, TResult = TData & { id: string }>(table: string, id: string, data: TData): Promise<TResult>
-  async create<TData extends AnyObject, TResult = TData & { id: string }>(table: string, idOrData: string | TData[], data?: TData): Promise<TResult | TResult[]> {
+  async create<TData extends AnyObject, TResult = TData & { id: string }>(table: string, idOrData: string | TData, data?: TData): Promise<TResult> {
     if (typeof idOrData === 'string') {
       const id = idOrData
 

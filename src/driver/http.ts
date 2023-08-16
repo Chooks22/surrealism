@@ -47,7 +47,7 @@ export interface SurrealKey {
    *
    * @link https://surrealdb.com/docs/integration/http#create-all
    */
-  post<TData extends AnyObject, TResults>(data: TData[], opts?: SurrealOpts): Promise<[SurrealData<TResults[]>]>
+  post<TData extends AnyObject, TResults>(data: TData, opts?: SurrealOpts): Promise<[SurrealData<TResults>]>
   /**
    * `POST` `/key/:table/:id`
    *
