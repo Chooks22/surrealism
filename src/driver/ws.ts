@@ -13,6 +13,7 @@ export type JSONPatch = { path: string } & (
 export class SurrealWs {
   #id = 0
   #queue = Object.create(null) as Record<number, (value: unknown) => void>
+  #listeners = Object.create(null) as Record<string, <TData>(value: TData) => void>
   #send<TResult>(method: string, params?: unknown[]) {
     const id = this.#id = (this.#id + 1) % Number.MAX_SAFE_INTEGER
     const prom = new Promise(res => {
@@ -21,7 +22,13 @@ export class SurrealWs {
     this.socket.send(JSON.stringify({ id, method, params }))
     return prom as Promise<TResult>
   }
-  #resolve(data: { id: number; result: unknown }) {
+  #resolve(data: { id?: number; result: unknown }) {
+    if (data.id === undefined) {
+      const payload = data.result as { action: string; id: string; result: unknown }
+      this.#listeners[payload.id]?.(payload.result)
+      return
+    }
+
     if (data.id in this.#queue) {
       this.#queue[data.id](data.result)
       delete this.#queue[data.id]
@@ -179,6 +186,13 @@ export class SurrealWs {
    */
   delete<TResult extends AnyObject = UnknownObject>(thing: string): Promise<TResult> {
     return this.#send('delete', [thing])
+  }
+  listen<TData extends AnyObject = UnknownObject>(id: string, cb: (value: TData) => void): () => Promise<void> {
+    this.#listeners[id]<TData> = cb
+    return async () => {
+      delete this.#listeners[id]
+      await this.query('KILL $id', { id })
+    }
   }
   async close(): Promise<void> {
     if (this.socket.readyState !== this.socket.CLOSED) {

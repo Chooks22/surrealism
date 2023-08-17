@@ -2,6 +2,25 @@ import { indexToName, serialize, type AnyObject, type DeepPartial, type MaybeArr
 import { SurrealHttp, type SurrealCredentials, type SurrealData, type SurrealOpts } from './http.ts'
 import { SurrealWs, type JSONPatch } from './ws.ts'
 
+export interface LiveQuery<T> {
+  (listener: (value: T) => void): Promise<() => Promise<void>>
+  [Symbol.asyncIterator]: () => AsyncGenerator<T, void, void>
+}
+
+interface Awaitable {
+  (): void
+  then: (onfulfilled?: (value?: void) => void) => void
+}
+
+function awaitable(): Awaitable {
+  let resolve!: Awaitable
+  const promise = new Promise<void>(res => {
+    resolve = res as Awaitable
+    resolve.then = onfulfilled => promise.then(onfulfilled)
+  })
+  return resolve
+}
+
 export class Surreal {
   static new(connectionUri: string | {
     http?: string
@@ -222,6 +241,56 @@ export class Surreal {
 
     const _args = args.length > 0 ? args.map((value, i) => `${indexToName(i)}=${serialize(value)}`).join('&') : undefined
     return this.http!.sql(_query, { args: _args, ...this.opts })
+  }
+  live<TData extends AnyObject>(query: TemplateStringsArray, ...args: unknown[]): LiveQuery<TData> {
+    if (!this.ws) {
+      throw new Error('this method requires a ws driver')
+    }
+
+    const start = async () => {
+      const ns = indexToName(Date.now())
+
+      // live queries don't consume local vars,
+      // since vars are also live
+      for (let i = 0; i < args.length; i++) {
+        await this.ws!.let(`${ns}__${indexToName(i)}`, args[i])
+      }
+
+      const _query = `LIVE ${String.raw({ raw: query }, ...args.map((_, i) => `$${ns}__${indexToName(i)}`))}`
+      const [{ result: id }] = await this.ws!.query<[SurrealData<string>]>(_query)
+
+      return id
+    }
+
+    const handle: LiveQuery<TData> = async cb => {
+      const id = await start()
+      return this.ws!.listen(id, cb)
+    }
+
+    handle[Symbol.asyncIterator] = async function* (this: Surreal) {
+      const queue: TData[] = []
+      let next = awaitable()
+
+      const id = await start()
+      const kill = this.ws!.listen<TData>(id, value => {
+        queue.push(value)
+        next()
+      })
+
+      try {
+        while (true) {
+          if (queue.length === 0) {
+            await next
+            next = awaitable()
+          }
+          yield queue.shift()!
+        }
+      } finally {
+        await kill()
+      }
+    }.bind(this)
+
+    return handle
   }
   async health(): Promise<boolean> {
     if (!this.http) {
