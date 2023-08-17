@@ -1,6 +1,5 @@
-import type { MaybeArray } from '../_utils.ts';
-import { type AnyObject, type UnknownObject } from '../_utils.ts';
-import type { SurrealCredentials, SurrealData } from './http.ts';
+import type { AnyObject, MaybeArray, UnknownObject } from '../_utils.ts'
+import type { SurrealCredentials, SurrealData } from './http.ts'
 
 export type JSONPatch = { path: string } & (
   | { op: 'add'; value: any }
