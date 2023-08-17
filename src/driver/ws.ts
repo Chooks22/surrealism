@@ -2,13 +2,14 @@ import type { MaybeArray } from '../_utils.ts';
 import { type AnyObject, type UnknownObject } from '../_utils.ts';
 import type { SurrealCredentials, SurrealData } from './http.ts';
 
-export type JSONPatch = { path: string }
-& { op: 'add'; value: any }
-| { op: 'remove' }
-| { op: 'replace'; value: any }
-| { op: 'copy'; from: string }
-| { op: 'move'; from: string }
-| { op: 'test'; value: any }
+export type JSONPatch = { path: string } & (
+  | { op: 'add'; value: any }
+  | { op: 'remove' }
+  | { op: 'replace'; value: any }
+  | { op: 'copy'; from: string }
+  | { op: 'move'; from: string }
+  | { op: 'test'; value: any }
+)
 
 export class SurrealWs {
   #id = 0
