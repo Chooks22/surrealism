@@ -199,6 +199,7 @@ export class SurrealWs {
       await new Promise<void>(res => {
         this.socket.addEventListener('close', () => res(), { once: true })
       })
+      this.socket.close()
     }
   }
   async [(Symbol as AnyObject).asyncDispose](): Promise<void> {
