@@ -262,10 +262,10 @@ export class Surreal {
       return id
     }
 
-    const handle: LiveQuery<TData> = async cb => {
+    const handle = (async cb => {
       const id = await start()
       return this.ws!.listen(id, cb)
-    }
+    }) as LiveQuery<TData>
 
     handle[Symbol.asyncIterator] = async function* (this: Surreal) {
       const queue: TData[] = []
