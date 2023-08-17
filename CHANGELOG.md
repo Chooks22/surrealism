@@ -1,5 +1,11 @@
 # surrealism
 
+## 0.1.2
+
+### Patch Changes
+
+- Fix connection close
+
 ## 0.1.1
 
 ### Patch Changes
