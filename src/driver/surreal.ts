@@ -197,12 +197,20 @@ export class Surreal {
     const [res] = await this.http.key(table).patch<DeepPartial<TData>, TResult>(id, data, this.opts)
     return res.result[0]
   }
-  async patch(thing: string, patches: JSONPatch[]): Promise<JSONPatch[][]> {
+  async patch(table: string, patches: JSONPatch[]): Promise<JSONPatch[][]>
+  async patch(table: string, id: string, patches: JSONPatch[]): Promise<JSONPatch[][]>
+  async patch(table: string, idOrPatches: string | JSONPatch[], patches?: JSONPatch[]): Promise<JSONPatch[][]> {
     if (!this.ws) {
       throw new Error('this method requires a ws driver')
     }
 
-    return this.ws.patch(thing, patches)
+    if (typeof idOrPatches === 'string') {
+      const id = idOrPatches
+      return this.ws.patch(`${table}:${id}`, patches!)
+    }
+
+    const _patches = idOrPatches
+    return this.ws.patch(table, _patches)
   }
   async sql<TResult extends MaybeArray<SurrealData>>(query: TemplateStringsArray, ...args: unknown[]): Promise<TResult> {
     const _query = String.raw({ raw: query }, ...args.map((_, i) => `$${indexToName(i)}`))
